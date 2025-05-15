@@ -6,11 +6,11 @@ using System.Collections;
 public class EasterEgg : MonoBehaviour
 {
     [Header("Shake Detection Settings")]
-    public float shakeDetectionThreshold = 36f; // Thresh
+    private float shakeDetectionThreshold = 36f; // Thresh
     private bool easterEggActivated = false; // One trick pony
     public GameObject Stickman; // Main obj
     public GameObject TwerkBootyStickman; // Anim obj
-    public float twerkingTime = 7f; // 7/10
+    private float twerkingTime = 7f; // 7/10
     private Vector3 acceleration = Input.acceleration; // Get the cabrio
 
     void Update() // goes round and round
