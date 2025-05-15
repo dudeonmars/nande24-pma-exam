@@ -6,103 +6,48 @@ using System.Collections;
 public class EasterEgg : MonoBehaviour
 {
     [Header("Shake Detection Settings")]
+    public float shakeDetectionThreshold = 36f; // Thresh
+    private bool easterEggActivated = false; // One trick pony
+    public GameObject Stickman; // Main obj
+    public GameObject TwerkBootyStickman; // Anim obj
+    public float twerkingTime = 7f; // 7/10
+    private Vector3 acceleration = Input.acceleration; // Get the cabrio
 
-    // How strong the shake must be to count as a "shake"
-    public float shakeDetectionThreshold = 1f;
-
-    // How long the shake must be sustained to trigger the easter egg
-    public float requiredShakeDuration = 1.5f;
-
-    // Tracks how long the user has been shaking the device
-    private float shakeTimer = 0f;
-
-    // Prevents the easter egg from triggering more than once
-    private bool easterEggActivated = false;
-
-    // Reference to the GameObject to be activated/deactivated
-    public GameObject Stickman;
-
-    // Reference to the GameObject to be activated/deactivated
-    public GameObject TwerkBootyStickman;
-
-    public float twerkingTime = 7f;
-
-    void Start()
+    void Update() // goes round and round
     {
-        // Enable the gyroscope (optional, not required for accelerometer)
-        Input.gyro.enabled = true;
-    }
-
-    void Update()
-    {
-        DetectShake(); // Check for shaking each frame
+        DetectShake(); // Check chack
         
-        if (Input.GetKeyDown(KeyCode.T)) // Press T for Twerk
-        {
-            TriggerEasterEgg();
-            easterEggActivated = true;
+        if (Input.GetKeyDown(KeyCode.T)) { // Casually debugging what up?
+            if (easterEggActivated) return;
+            else TriggerEasterEgg();
         }
     }
 
     void DetectShake()
     {
-        // If the easter egg has already been triggered, stop checking
-        if (easterEggActivated)
-            return;
-
-        // Get the current acceleration of the device
-        Vector3 acceleration = Input.acceleration;
-
-        // If the magnitude of acceleration is over the shake threshold
-        if (acceleration.sqrMagnitude >= shakeDetectionThreshold * shakeDetectionThreshold)
-        {
-            Debug.Log("shake");
-            // Increment the shake timer
-            shakeTimer += Time.deltaTime;
-             TriggerEasterEgg();
-               
-        }
-        else
-        {
-            // If the shake stops, reset the timer
-            shakeTimer = 0f;
-        }
+        if (easterEggActivated) return; // Is pony dead?
+        else if (acceleration.sqrMagnitude >= shakeDetectionThreshold) TriggerEasterEgg(); // Does thing go wroom?           
     }
 
-    // This method runs when the easter egg condition is met
-    void TriggerEasterEgg()
+    void TriggerEasterEgg() // Shake shak
     {
-        if (easterEggActivated)
-            return;
+        AudioManager.Instance.PlaySFX("EasterEgg"); // Go milo!!
 
-        AudioManager.Instance.PlaySFX("EasterEgg");
-        Debug.Log("Easter Egg Activated by Shake!");
+        TwerkBootyStickman.transform.position = Stickman.transform.position; // avengers, assemble
+        Stickman.SetActive(false); // bye bye baby
+        TwerkBootyStickman.SetActive(true); // oh hello there
 
-        TwerkBootyStickman.transform.position = Stickman.transform.position;
-
-        Stickman.SetActive(false);
-        TwerkBootyStickman.SetActive(true);
-
-        StartCoroutine(RevertAfterSeconds(twerkingTime));
-
-        easterEggActivated = true;
-
-        
-        // TODO: Replace this with your custom easter egg action
-        // For example: show a hidden UI, load a scene, spawn an object, etc.
+        StartCoroutine(RevertAfterSeconds(twerkingTime)); // take it home
+        easterEggActivated = true; // no more tricks
     }
 
     private IEnumerator RevertAfterSeconds(float duration)
     {
-        yield return new WaitForSeconds(duration);
+        yield return new WaitForSeconds(duration); // hol up 
         
-        Stickman.transform.position = TwerkBootyStickman.transform.position;
-
-        Stickman.SetActive(true);
-        TwerkBootyStickman.SetActive(false);
-
-        easterEggActivated = false;
-
+        Stickman.transform.position = TwerkBootyStickman.transform.position; // better together
+        Stickman.SetActive(true); // back so soon
+        TwerkBootyStickman.SetActive(false); // bay city rollers stop playing
     }
 }
 
