@@ -11,7 +11,6 @@ public class EasterEgg : MonoBehaviour
     public GameObject Stickman; // Main obj
     public GameObject TwerkBootyStickman; // Anim obj
     private float twerkingTime = 7f; // 7/10
-    private Vector3 acceleration = Input.acceleration; // Get the cabrio
 
     void Update() // goes round and round
     {
@@ -25,6 +24,7 @@ public class EasterEgg : MonoBehaviour
 
     void DetectShake()
     {
+        Vector3 acceleration = Input.acceleration; // Get the cabrio
         if (easterEggActivated) return; // Is pony dead?
         else if (acceleration.sqrMagnitude >= shakeDetectionThreshold) TriggerEasterEgg(); // Does thing go wroom?           
     }
